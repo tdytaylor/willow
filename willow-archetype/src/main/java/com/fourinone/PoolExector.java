@@ -6,26 +6,32 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-class PoolExector //java.io.Closeable
-{
+//java.io.Closeable
+public class PoolExector {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(PoolExector.class);
 
   private static ThreadPoolExecutor tpe;//rm static, new everytime
   private static ScheduledThreadPoolExecutor stpe;//rm static, new everytime
 
-  static synchronized ThreadPoolExecutor tpe()//
-  {
+  static synchronized ThreadPoolExecutor tpe() {
     if (tpe == null) {
       //System.out.println(Thread.currentThread()+":new ThreadPoolExecutor...");
+      LOGGER.info("{}:new ThreadPoolExecutor...", Thread.currentThread());
       int corePoolSize = ConfigContext.getInitServices();
       int maximumPoolSize = ConfigContext.getMaxServices();
       long keepAliveTime = 3000;
       TimeUnit unit = TimeUnit.MILLISECONDS;
-      BlockingQueue<Runnable> waitQueue = new ArrayBlockingQueue<Runnable>(2000);
-      RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();//ThreadPoolExecutor.CallerRunsPolicy();
+      BlockingQueue<Runnable> waitQueue = new ArrayBlockingQueue<>(2000);
+      //ThreadPoolExecutor.CallerRunsPolicy();
+      RejectedExecutionHandler handler = new ThreadPoolExecutor.AbortPolicy();
       tpe = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, unit, waitQueue,
           handler);
       //System.out.println(Thread.currentThread()+":new done.");
+      LOGGER.info("{}::new done.", Thread.currentThread());
     }
     return tpe;
   }
