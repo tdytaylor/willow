@@ -22,6 +22,8 @@
     <guava.version>30.0-jre</guava.version>
     <jackson.version>2.11.2</jackson.version>
     <netty.version>4.1.55.Final</netty.version>
+    <junit.jupiter.version>5.5.2</junit.jupiter.version>
+    <junit.platform.version>1.5.2</junit.platform.version>
   </properties>
 
   <dependencyManagement>
@@ -76,8 +78,34 @@
         <artifactId>netty-all</artifactId>
         <version>${netty.version}</version>
       </dependency>
+
+      <!-- junit5 -->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.platform</groupId>
+        <artifactId>junit-platform-runner</artifactId>
+        <version>${junit.platform.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>

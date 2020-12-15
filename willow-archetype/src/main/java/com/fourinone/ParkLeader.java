@@ -5,8 +5,12 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParkLeader {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ParkLeader.class);
 
   private final LinkedBlockingQueue<String> bq = new LinkedBlockingQueue<String>();
   boolean ismaster = false;
@@ -210,7 +214,8 @@ public class ParkLeader {
   }
 
   protected void wantBeMaster(Park pk) {
-    LogUtil.info("", "", "wantBeMaster.............................");
+    // LogUtil.info("", "", "wantBeMaster.............................");
+    LOGGER.info("{}{} {}", "", "", "wantBeMaster.............................");
     String[] sv = new String[2];
     Park othermaster = getOtherMasterPark(sv);
     if (othermaster == null) {

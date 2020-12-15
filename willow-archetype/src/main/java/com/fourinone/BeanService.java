@@ -8,8 +8,16 @@ import java.rmi.server.UnicastRemoteObject;
 
 class BeanService extends PoolExector {
 
-  final static void putBean(String TPYFWYM, boolean TPYRZDY, int TPYDK, String rmname,
-      ParkActive paobj) {
+  /**
+   *
+   * @param TPYFWYM
+   * @param TPYRZDY
+   * @param TPYDK
+   * @param rmname
+   * @param paobj
+   */
+  final static void putBean(String TPYFWYM, boolean TPYRZDY,
+      int TPYDK, String rmname, ParkActive paobj) {
     if (TPYFWYM != null) {
       System.setProperty(ConfigContext.getYMMZ(), TPYFWYM);
     }
