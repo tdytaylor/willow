@@ -9,7 +9,6 @@ import java.rmi.server.UnicastRemoteObject;
 class BeanService extends PoolExector {
 
   /**
-   *
    * @param TPYFWYM
    * @param TPYRZDY
    * @param TPYDK
@@ -61,7 +60,7 @@ class BeanService extends PoolExector {
 
   final static ParkActive getBean(String TPYYM, int TPYDK, String rmname) throws RemoteException {
     try {
-      if (ConfigContext.getTMOT() > 0l) {
+      if (ConfigContext.getTMOT() > 0L) {
         System.setProperty(ConfigContext.getQSXYSJ(), ConfigContext.getTMOT() + "");
       }
       return (ParkActive) Naming.lookup(ConfigContext.getProtocolInfo(TPYYM, TPYDK, rmname));

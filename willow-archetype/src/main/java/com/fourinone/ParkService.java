@@ -8,6 +8,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.CRC32;
 
+/**
+ * 职介所-资源协调者
+ */
 public class ParkService extends MementoService implements Park {
 
   private static final ObjValue hbinfo = new ObjValue();
@@ -22,41 +25,41 @@ public class ParkService extends MementoService implements Park {
     pl.wantBeMaster(this);
   }
 
-  /*public List<ObjValue> getNodesInDomain(String domain, String sessionid) throws RemoteException
-  {
-    return null;
-  }*/
-  public static void main(String[] args) {
-    if (args != null && args.length == 2) {
-      BeanContext.startPark(args[0], Integer.parseInt(args[1]));
-    } else {
-      BeanContext.startPark();
-    }
-		/*BeanContext.setConfigFile("D:\\demo\\comutil\\test\\config.xml");
-		String[][] servers = new String[args.length][];
-		for(int i=0;i<args.length;i++){
-			String[] theserver = new String[]{"localhost",args[i]};
-			servers[i] = theserver;
-		}
-		try{
-			ParkService ps = new ParkService(servers[0][0],Integer.parseInt(servers[0][1]), servers, "ParkService");
-			Long i=new Long(0);
-			System.out.println(i+","+new java.util.Date());
-			while(true)
-			{
-				ObjValue ov = ps.createTest("d", i+"", new byte[1], "aaaaa", 7, false);
-				if(i%100==0)
-				{
-					System.out.println(i+","+new java.util.Date());
-				}
-				i++;
-			}
-		}catch(Exception e){
-			System.out.println(e);
-		}*/
-    //BeanContext.startPark(servers[0][0],Integer.parseInt(servers[0][1]), servers);
-    //BeanContext.startPark();
-  }
+//  /*public List<ObjValue> getNodesInDomain(String domain, String sessionid) throws RemoteException
+//  {
+//    return null;
+//  }*/
+//  public static void main(String[] args) {
+//    if (args != null && args.length == 2) {
+//      BeanContext.startPark(args[0], Integer.parseInt(args[1]));
+//    } else {
+//      BeanContext.startPark();
+//    }
+//		/*BeanContext.setConfigFile("D:\\demo\\comutil\\test\\config.xml");
+//		String[][] servers = new String[args.length][];
+//		for(int i=0;i<args.length;i++){
+//			String[] theserver = new String[]{"localhost",args[i]};
+//			servers[i] = theserver;
+//		}
+//		try{
+//			ParkService ps = new ParkService(servers[0][0],Integer.parseInt(servers[0][1]), servers, "ParkService");
+//			Long i=new Long(0);
+//			System.out.println(i+","+new java.util.Date());
+//			while(true)
+//			{
+//				ObjValue ov = ps.createTest("d", i+"", new byte[1], "aaaaa", 7, false);
+//				if(i%100==0)
+//				{
+//					System.out.println(i+","+new java.util.Date());
+//				}
+//				i++;
+//			}
+//		}catch(Exception e){
+//			System.out.println(e);
+//		}*/
+//    //BeanContext.startPark(servers[0][0],Integer.parseInt(servers[0][1]), servers);
+//    //BeanContext.startPark();
+//  }
 
   private String checkSessionId(String sessionid) {
     if (sessionid == null) {
@@ -91,10 +94,12 @@ public class ParkService extends MementoService implements Park {
     return new Long(crc.getValue());
   }
 
+  @Override
   public String getSessionId() throws RemoteException {
     return checkSessionId(null);
   }
 
+  @Override
   public ObjValue create(String domain, String node, byte[] obj, String sessionid, int auth,
       boolean heartbeat) throws RemoteException, ClosetoOverException {
     ClosetoOverException.checkMemCapacity();
@@ -149,6 +154,7 @@ public class ParkService extends MementoService implements Park {
   }
 
   //synchronized
+  @Override
   public ObjValue update(String domain, String node, byte[] obj, String sessionid)
       throws RemoteException, ClosetoOverException {
     ClosetoOverException.checkMemCapacity();
@@ -191,6 +197,7 @@ public class ParkService extends MementoService implements Park {
     return objv;
   }
 
+  @Override
   public boolean update(String domain, int auth, String sessionid) throws RemoteException {
     boolean updateflag = false;
     if (domain != null) {
@@ -216,6 +223,7 @@ public class ParkService extends MementoService implements Park {
     return updateflag;
   }
 
+  @Override
   public ObjValue delete(String domain, String node, String sessionid)
       throws RemoteException, ClosetoOverException {
     ObjValue objrm = null;
@@ -243,20 +251,22 @@ public class ParkService extends MementoService implements Park {
         Long nodenum = (Long) parkinfo.getObj(domain);
         //System.out.println("delete nodenum:"+nodenum);
         if (nodenum != null) {
-          if (nodenum == 1l) {
+          if (nodenum == 1L) {
             parkinfo.removeDomain(domain);//removeNodeWidely(domain);
           } else {
             parkinfo.setObj(domain, nodenum - 1);
+            //updateDomainVersion(domain)
             parkinfo.setObj(ParkMeta.getYBB(domain),
-                updateDomainVersion());//updateDomainVersion(domain)
+                updateDomainVersion());
           }
         }
         LogUtil.fine("[delete]", "[" + domainnodekey + "]", objrm);
         pl.runCopyTask(domainnodekey, this);
       } else {
         objrm = null;
+        //throw not exist exception
         LogUtil.info("[Park]", "[delete]",
-            domainnodekey + " cant be deleted or not exist!");//throw not exist exception
+            domainnodekey + " cant be deleted or not exist!");
       }
     } catch (Exception e) {
       //e.printStackTrace();
@@ -286,6 +296,7 @@ public class ParkService extends MementoService implements Park {
     return authflag;
   }
 
+  @Override
   public ObjValue get(String domain, String node, String sessionid)
       throws RemoteException, ClosetoOverException {
     //String thesessionid = checkSessionId(sessionid);
@@ -310,6 +321,7 @@ public class ParkService extends MementoService implements Park {
     return ov;
   }
 
+  @Override
   public ObjValue getLastest(String domain, String node, String sessionid, long version)
       throws RemoteException, ClosetoOverException {
     //lk.lock();
@@ -327,6 +339,7 @@ public class ParkService extends MementoService implements Park {
     return ov;
   }
 
+  @Override
   public ObjValue getParkinfo() throws RemoteException {
     try {
       LogUtil.fine("[Park]", "[getParkinfo]", "getParkinfo from " + getClientHost());
@@ -345,6 +358,7 @@ public class ParkService extends MementoService implements Park {
     return ov;
   }
 
+  @Override
   public boolean setParkinfo(ObjValue ov) throws RemoteException {
     LogUtil.fine("[Park]", "[setParkinfo]", ov);
     Lock wlk = rwlk.writeLock();
@@ -354,21 +368,24 @@ public class ParkService extends MementoService implements Park {
     return true;
   }
 
+  @Override
   public String[] askMaster() throws RemoteException {
     LogUtil.info("[Park]", "[askMaster]", "receive askMaster................");
     return pl.isMaster();
   }
 
+  @Override
   public boolean askLeader() throws RemoteException, LeaderException {
     LogUtil.info("[Park]", "[askLeader]", "receive askLeader................");
     String[] sv = new String[2];
     if (pl.checkMasterPark(sv, this)) {
       return true;
     } else {
-      throw new LeaderException(pl.getThisserver(), sv);
+      throw new LeaderException(pl.getCurrentServer(), sv);
     }
   }
 
+  @Override
   public boolean heartbeat(String[] domainnodekey, String sessionid) throws RemoteException {
     boolean hbback = false;
     if (domainnodekey != null) {

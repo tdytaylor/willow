@@ -102,6 +102,7 @@ public class PoolExector {
       namePrefix = specialName + "-pool" + "-thread-";
     }
 
+    @Override
     public Thread newThread(Runnable r) {
       Thread t = new Thread(group, r,
           namePrefix + threadNumber.getAndIncrement(),

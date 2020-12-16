@@ -7,8 +7,12 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BeanContext extends ServiceContext {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(BeanContext.class);
 
   public static void setConfigFile(String configFile) {
     ConfigContext.configFile = configFile;
@@ -36,16 +40,24 @@ public class BeanContext extends ServiceContext {
     return getPark(host, port, parkcfg);
   }
 
-  public static void startPark(String host, int port, String sn, String[][] servers) {
+  /**
+   * @param host       启动的ip地址
+   * @param port       端口
+   * @param serverName 服务名称
+   * @param servers
+   */
+  public static void startPark(String host, int port, String serverName, String[][] servers) {
     try {
       //DelegateConsole.bind(Park.class, new ParkService(host, port, servers, sn));
-      startService(host, port, sn, new ParkService(host, port, servers, sn));
+      startService(host, port, serverName, new ParkService(host, port, servers, serverName));
       //BeanService.putBean(host, true, port, sn, new ParkService(host, port, servers, sn));//input serverconfiglist string[][]
       if (Boolean.valueOf(ConfigContext.getConfig("PARK", "STARTWEBAPP", null, "false"))) {
         startInetServer();
       }
-    } catch (RemoteException e) {//new ParkService throw
-      LogUtil.info("[BeanContext]", "[startPark]", e);
+    } catch (RemoteException e) {
+      // new ParkService throw
+//      LogUtil.info("[BeanContext]", "[startPark]", e);
+      LOGGER.info("{} {} {}", "[BeanContext]","[startPark]", e);
       //e.printStackTrace();
     }
   }
@@ -61,8 +73,9 @@ public class BeanContext extends ServiceContext {
     startPark(host, port, parkcfg);
   }
 
-  public static void startPark()//String configfile
-  {
+  //String configfile
+  public static void startPark() {
+    // 获取Park配置的地址
     String[][] parkcfg = ConfigContext.getParkConfig();
     startPark(parkcfg[0][0], Integer.parseInt(parkcfg[0][1]), parkcfg);
   }

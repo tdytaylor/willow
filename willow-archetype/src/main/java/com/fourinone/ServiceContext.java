@@ -1,8 +1,12 @@
 package com.fourinone;
 
 import java.rmi.RemoteException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-class ServiceContext extends BeanService {
+public class ServiceContext extends BeanService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceContext.class);
 
   static <I extends ParkActive> void startService(String host, int port, String sn, I i) {
     try {
@@ -12,9 +16,8 @@ class ServiceContext extends BeanService {
     }
   }
 
-  static <I extends ParkActive> void startService(String host, int port, String sn, I i, String cb,
-      String pl)//
-  {
+  static <I extends ParkActive> void startService(String host, int port, String sn,
+      I i, String cb, String pl) {
     try {
       putBean(host, false, port, sn, i, cb, pl, new ParkManager());
       //pm.checkPermission(new ParkPermission("park","all"));

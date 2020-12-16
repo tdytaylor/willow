@@ -8,7 +8,7 @@ public class ParkPatternExector
 	static boolean newParkFlag=false;
 	private static ParkLocal pl;
 	private static LinkedBlockingQueue<ParkPatternBean> bq = new LinkedBlockingQueue<ParkPatternBean>();
-	private static AsyncExector aeLastest=null;
+	private static AsyncExecutor aeLastest=null;
 	
 	static ParkLocal getParkLocal()
 	{
@@ -77,7 +77,7 @@ public class ParkPatternExector
 			
 			if(aeLastest==null){
 				LogUtil.fine("", "", "AsyncExector aeLastest:");
-				(aeLastest = new AsyncExector(){
+				(aeLastest = new AsyncExecutor(){
 					public void task(){
 						try{
 							while(true){

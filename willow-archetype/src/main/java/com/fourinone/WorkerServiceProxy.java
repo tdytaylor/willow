@@ -121,7 +121,7 @@ public class WorkerServiceProxy extends PoolExector
 	public WareHouse dotaskimpl(final WareHouse inhouse){
 		final WareHouse outhouse = new WareHouse();
 		//final WareHouse aehouse = new WareHouse("doTask",new WareHouse());
-		new AsyncExector(){
+		new AsyncExecutor(){
 			public void task(){
 				try{
 					outhouse.putAll(wk.doTask(inhouse));

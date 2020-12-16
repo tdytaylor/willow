@@ -449,7 +449,8 @@ final public class ParkProxy {
     final String nd = node;
     final ObjectBean oob = ob;
     final LastestListener lis = liser;
-    new AsyncExector() {
+    new AsyncExecutor() {
+      @Override
       public void task() {
         try {
 					/*ObjectBean newob = null;
@@ -481,7 +482,7 @@ final public class ParkProxy {
     final String dm = domain;
     final List<ObjectBean> ols = oblist;
     final LastestListener lis = liser;
-    new AsyncExector() {
+    new AsyncExecutor() {
       public void task() {
         try {
 					/*List<ObjectBean> newls = null;

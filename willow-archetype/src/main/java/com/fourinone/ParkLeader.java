@@ -8,57 +8,40 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * park leader
+ *
+ * @author null
+ */
 public class ParkLeader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ParkLeader.class);
 
-  private final LinkedBlockingQueue<String> bq = new LinkedBlockingQueue<String>();
+  private final LinkedBlockingQueue<String> bq = new LinkedBlockingQueue<>();
   boolean ismaster = false;
   boolean alwaystry = false;
-  String[][] groupserver = new String[][]{{"localhost", "1888"}, {"localhost", "1889"},
+  String[][] groupServerAddrs = new String[][]{{"localhost", "1888"}, {"localhost", "1889"},
       {"localhost", "1890"}};
   private String parkservicecfg = "ParkService";
-  private String[] thisserver; //thishost,thisport;cur host for service and cur leader for proxy
-  private AsyncExector rpl = null;
+
+  /**
+   * thishost,thisport;cur host for service and cur leader for proxy
+   */
+  private String[] currentServer;
+
+  private AsyncExecutor rpl = null;
 
   ParkLeader(String host, int port, String parkservicecfg) {
     this.parkservicecfg = parkservicecfg;
-    thisserver = new String[]{host, "" + port};
+    currentServer = new String[]{host, "" + port};
     this.alwaystry = Boolean
         .valueOf(ConfigContext.getConfig("PARK", "ALWAYSTRYLEADER", null, "false"));
   }
 
-  ParkLeader(String host, int port, String[][] groupserver, String parkservicecfg) {
+  ParkLeader(String host, int port, String[][] groupServerAddrs, String parkservicecfg) {
     this(host, port, parkservicecfg);
-    this.groupserver = groupserver;
+    this.groupServerAddrs = groupServerAddrs;
   }
-
-  //ParkLeader(String host, int port, String[][] groupserver)
-	
-	/*getMasterPark(){catch remoteexception and try next until get one};
-	protected Park getMasterPark(){
-		Park pk = null;
-		try{
-			pk = (Park)BeanService.getBean(thisserver[0],Integer.parseInt(thisserver[1]),"ParkService");
-			if(pk!=null){
-				if(pk.askLeader())
-					return pk;
-			}
-		}catch(RemoteException re){
-			re.printStackTrace();
-			if(re instanceof ConnectException){
-				pk = getNextMaster();
-			}
-		}
-		catch(LeaderException le){
-			le.printStackTrace();
-			String[] ls = le.getLeaderServer();
-			System.out.println(ls.getLeaderServer()[0]);
-			thisserver = ls;
-			pk = getMasterPark();
-		}
-		return pk;
-	}*/
 
   public static void main(String[] args) {
     ParkLeader pl = new ParkLeader("localhost", 1888, "ParkService");
@@ -69,20 +52,20 @@ public class ParkLeader {
 
   protected Park getLeaderPark() {
     LogUtil.info("", "", "getLeaderPark...................");
-    int index = getLeaderIndex(thisserver);
+    int index = getLeaderIndex(currentServer);
     return electionLeader(-1, index);
   }
 
   protected Park getNextLeader() {
     LogUtil.info("", "", "getNextLeader...................");
-    int index = getLeaderIndex(thisserver);
+    int index = getLeaderIndex(currentServer);
     return electionLeader(index, index + 1);
   }
 
   private int getLeaderIndex(String[] sa) {
     int i = 0;
-    for (; i < groupserver.length; i++) {
-      if (Arrays.equals(sa, groupserver[i])) {
+    for (; i < groupServerAddrs.length; i++) {
+      if (Arrays.equals(sa, groupServerAddrs[i])) {
         break;
       }
     }
@@ -92,9 +75,9 @@ public class ParkLeader {
   protected Park electionLeader(int b, int i) {
     Park pk = null;
     boolean thesarrok = true;
-    i = i < groupserver.length ? i : 0;
+    i = i < groupServerAddrs.length ? i : 0;
     //b=b<0?groupserver.length-1:b;
-    String[] sarr = groupserver[i];
+    String[] sarr = groupServerAddrs[i];
     try {
       pk = (Park) BeanService.getBean(sarr[0], Integer.parseInt(sarr[1]), parkservicecfg);
       if (pk != null) {
@@ -104,8 +87,8 @@ public class ParkLeader {
       LogUtil.info("electionLeader", "(" + sarr[0] + ":" + sarr[1] + "):", re.getMessage());
       thesarrok = false;
       if (re instanceof ConnectException) {
-        if (b != i)//one cycle
-        {
+        //one cycle
+        if (b != i) {
           b = !alwaystry && b < 0 ? i : b;
           pk = electionLeader(b, i + 1);
         }
@@ -119,8 +102,8 @@ public class ParkLeader {
       pk = electionLeader(-1, leaderindex);
     }
     if (thesarrok) {
-      thisserver = sarr;
-      LogUtil.info("", "", "leader server is(" + thisserver[0] + ":" + thisserver[1] + ")");
+      currentServer = sarr;
+      LogUtil.info("", "", "leader server is(" + currentServer[0] + ":" + currentServer[1] + ")");
     }
     return pk;
   }
@@ -145,8 +128,8 @@ public class ParkLeader {
   protected Park electionLeader(int i) {
     Park pk = null;
     boolean thesarrok = true;
-    i = i < groupserver.length ? i : 0;
-    String[] sarr = groupserver[i];
+    i = i < groupServerAddrs.length ? i : 0;
+    String[] sarr = groupServerAddrs[i];
     try {
       pk = (Park) BeanService.getBean(sarr[0], Integer.parseInt(sarr[1]), parkservicecfg);
       if (pk != null) {
@@ -167,19 +150,19 @@ public class ParkLeader {
       pk = electionLeader(leaderindex);
     }
     if (thesarrok) {
-      thisserver = sarr;
-      LogUtil.info("", "", "leader server is(" + thisserver[0] + ":" + thisserver[1] + ")");
+      currentServer = sarr;
+      LogUtil.info("", "", "leader server is(" + currentServer[0] + ":" + currentServer[1] + ")");
     }
     return pk;
   }
 
   protected Park[] getOtherPark() {
-    ArrayList<Park> pklist = new ArrayList<Park>();
-    for (String[] sarr : groupserver) {
-      if (!Arrays.equals(thisserver, sarr)) {
+    ArrayList<Park> pklist = new ArrayList<>();
+    for (String[] sarr : groupServerAddrs) {
+      if (!Arrays.equals(currentServer, sarr)) {
         try {
-          Park pk = (Park) BeanService
-              .getBean(sarr[0], Integer.parseInt(sarr[1]), parkservicecfg);//try catch cant null
+          // try catch cant null
+          Park pk = (Park) BeanService.getBean(sarr[0], Integer.parseInt(sarr[1]), parkservicecfg);
           pklist.add(pk);
         } catch (RemoteException re) {
           LogUtil.fine("getOtherPark", "(" + sarr[0] + ":" + sarr[1] + "):", re.getMessage());
@@ -193,7 +176,7 @@ public class ParkLeader {
   protected boolean checkMasterPark(String[] sv, Park pk) {
     if (ismaster
         || getOtherMasterPark(sv) == null) {//cant ismaster for double conflict in net break
-      copyArray(thisserver, sv);
+      copyArray(currentServer, sv);
       setMaster(true, pk);
       return true;
     } else {
@@ -213,12 +196,17 @@ public class ParkLeader {
 		}*/
   }
 
+  /**
+   * try to be master
+   *
+   * @param pk
+   */
   protected void wantBeMaster(Park pk) {
     // LogUtil.info("", "", "wantBeMaster.............................");
     LOGGER.info("{}{} {}", "", "", "wantBeMaster.............................");
     String[] sv = new String[2];
-    Park othermaster = getOtherMasterPark(sv);
-    if (othermaster == null) {
+    Park otherMaster = getOtherMasterPark(sv);
+    if (otherMaster == null) {
       LogUtil.info("", "", "get one of other parks for init parkInfo.........");
       Park[] pks = getOtherPark();
       if (pks.length > 0) {
@@ -227,7 +215,7 @@ public class ParkLeader {
       setMaster(true, pk);
     } else {
       LogUtil.info("", "", "wantBeMaster,master is (" + sv[0] + ":" + sv[1] + ")");
-      setInitParkInfo(othermaster, pk);
+      setInitParkInfo(otherMaster, pk);
     }
   }
 
@@ -242,14 +230,14 @@ public class ParkLeader {
 
   private void setMaster(boolean ismaster, Park pk) {
     this.ismaster = ismaster;
-    LogUtil.info("", "", "setMaster(" + thisserver[0] + ":" + thisserver[1] + "):" + ismaster);
+    LogUtil.info("", "", "setMaster(" + currentServer[0] + ":" + currentServer[1] + "):" + ismaster);
     if (this.ismaster) {
       HbDaemo.runClearTask((ParkService) pk);
     }
   }
 
   protected String[] isMaster() {
-    return ismaster ? thisserver : null;
+    return ismaster ? currentServer : null;
   }
 
   protected Park getOtherMasterPark(String[] sv) {
@@ -297,7 +285,8 @@ public class ParkLeader {
     //static{}
     if (rpl == null) {
       LogUtil.fine("", "", "runCopyTask AsyncExector:");
-      (rpl = new AsyncExector() {
+      (rpl = new AsyncExecutor() {
+        @Override
         public void task() {
           try {
             while (true) {
@@ -337,7 +326,7 @@ public class ParkLeader {
     }
   }
 
-  public String[] getThisserver() {
-    return thisserver;
+  public String[] getCurrentServer() {
+    return currentServer;
   }
 }

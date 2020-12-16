@@ -2,6 +2,9 @@ package com.fourinone;
 
 import java.rmi.RemoteException;
 
+/**
+ * rmi 服务接口
+ */
 public interface Park extends ParkActive {
 
   //public <T extends java.io.Serializable> ObjValue create(String domain, String node, T obj, String sessionid, int auth, boolean heartbeat) throws RemoteException;//acl

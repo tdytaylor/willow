@@ -8,7 +8,8 @@ import java.util.Properties;
 
 public class ConfigContext {
 
-  static String configFile = new File("").getAbsolutePath() + File.separator + "config.xml";
+//  static String configFile = new File("").getAbsolutePath() + File.separator + "config.xml";
+  static String configFile = ConfigContext.class.getResource("/").getPath() + "config.xml";
   private static final MulBean mb = null;
   private static String QSXYSJ = null, YMMZ = null, RZDY = null, YCDYXY = null, DMY = null, AQCL = null, POLICY = null, LSML = null, SERVICEONWORKER = null;
   private static long TMOT = -1;
@@ -325,10 +326,13 @@ public class ConfigContext {
   }
 
   public static void main(String[] args) {
-    BeanContext.setConfigFile("D:\\demo\\comutil\\test\\config.xml");
+//    BeanContext.setConfigFile("D:\\demo\\comutil\\test\\config.xml");
     System.out.println(getParkConfig()[0][0]);
     LogUtil.fine(getCacheConfig());
     LogUtil.fine("getParallelPattern:" + getParallelPattern());
     System.out.println(getConfig("CACHEFACADE", "TRYKEYSNUM", null, "500"));
+
+    System.out.println(ConfigContext.class.getResource("/").getPath());
+
   }
 }

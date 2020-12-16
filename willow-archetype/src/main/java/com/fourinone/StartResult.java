@@ -71,7 +71,7 @@ public class StartResult<E> extends Result {
 
   public void print(final String logpath) {
     final InputStream is = p.getInputStream();
-    new AsyncExector() {
+    new AsyncExecutor() {
       public void task() { //throws Exception
         BufferedReader stdout = new BufferedReader(new InputStreamReader(is));
         FileAdapter fa = new FileAdapter(new File(logpath).getPath());
