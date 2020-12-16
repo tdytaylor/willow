@@ -1,16 +1,13 @@
 package org.willow.rpc;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
-import java.nio.channels.Channel;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +40,9 @@ public class NettyServer {
     bootstrap = new ServerBootstrap();
 
     bossGroup = NettyEventLoopFactory.eventLoopGroup(1, "NettyServerBoss");
-    workerGroup = NettyEventLoopFactory.eventLoopGroup(
-        getUrl().getPositiveParameter(IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
-        "NettyServerWorker");
-
-    final NettyServerHandler nettyServerHandler = new NettyServerHandler(getUrl(), this);
-    channels = nettyServerHandler.getChannels();
+    workerGroup = NettyEventLoopFactory
+        .eventLoopGroup(Runtime.getRuntime().availableProcessors() * 2,
+            "NettyServerWorker");
 
     bootstrap.group(bossGroup, workerGroup)
         .channel(NettyEventLoopFactory.serverSocketChannelClass())
@@ -58,22 +52,11 @@ public class NettyServer {
         .childHandler(new ChannelInitializer<SocketChannel>() {
           @Override
           protected void initChannel(SocketChannel ch) throws Exception {
-            // FIXME: should we use getTimeout()?
-            int idleTimeout = UrlUtils.getIdleTimeout(getUrl());
-            NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyServer.this);
-            if (getUrl().getParameter(SSL_ENABLED_KEY, false)) {
-              ch.pipeline().addLast("negotiation",
-                  SslHandlerInitializer.sslServerHandler(getUrl(), nettyServerHandler));
-            }
-            ch.pipeline()
-                .addLast("decoder", adapter.getDecoder())
-                .addLast("encoder", adapter.getEncoder())
-                .addLast("server-idle-handler", new IdleStateHandler(0, 0, idleTimeout, MILLISECONDS))
-                .addLast("handler", nettyServerHandler);
+            ch.pipeline();
           }
         });
     // bind
-    ChannelFuture channelFuture = bootstrap.bind(getBindAddress());
+    ChannelFuture channelFuture = bootstrap.bind(9999);
     channelFuture.syncUninterruptibly();
     channel = channelFuture.channel();
 

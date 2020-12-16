@@ -1,7 +1,6 @@
 package org.willow.rpc;
 
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.epoll.EpollSocketChannel;
@@ -13,6 +12,9 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import java.util.concurrent.ThreadFactory;
 
+/**
+ * from dubbo
+ */
 public class NettyEventLoopFactory {
 
   public static EventLoopGroup eventLoopGroup(int threads, String threadFactoryName) {
@@ -30,12 +32,11 @@ public class NettyEventLoopFactory {
   }
 
   private static boolean shouldEpoll() {
-    Configuration configuration = ApplicationModel.getEnvironment().getConfiguration();
-    if (configuration.getBoolean("netty.epoll.enable", false)) {
-      String osName = configuration.getString("os.name");
-      return osName.toLowerCase().contains("linux") && Epoll.isAvailable();
-    }
-
-    return false;
+//    Configuration configuration = ApplicationModel.getEnvironment().getConfiguration();
+//    if (configuration.getBoolean("netty.epoll.enable", false)) {
+//      String osName = configuration.getString("os.name");
+//      return osName.toLowerCase().contains("linux") && Epoll.isAvailable();
+//    }
+    return System.getProperty("os.name").toLowerCase().contains("linux");
   }
 }
