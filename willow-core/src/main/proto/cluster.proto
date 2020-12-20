@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package org.willow.proto;
+
+option java_package = "org.willow.proto";
+
+message AddNodeRequest {
+  string addr = 1;
+  string masterAddr = 2;
+}
+
