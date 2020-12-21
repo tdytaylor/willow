@@ -5,8 +5,16 @@ import java.util.List;
 
 abstract class ParallelService {
 
+  /**
+   * @param host
+   * @param port
+   * @param workerType
+   */
   abstract public void waitWorking(String host, int port, String workerType);
 
+  /**
+   * @param workerType
+   */
   abstract public void waitWorking(String workerType);
 	
 	/*WorkerLocal[] getWorkersService(String workerType)
@@ -36,31 +44,47 @@ abstract class ParallelService {
 		return wklist.toArray(new WorkerLocal[wklist.size()]);
 	}*/
 
-  List<String[]> getWorkersServicePark(String parkhost, int parkport, String workerType) {
-    List<ObjectBean> oblist = ParkPatternExector.getWorkerTypeList(parkhost, parkport, workerType);
-    List<String[]> wslist = new ArrayList<String[]>();
-    for (ObjectBean ob : oblist) {
-      String[] hostport = ((String) ob.toObject()).split(":");
-			if (!hostport[0].equals(null) || Integer.parseInt(hostport[1]) != 0) {
-				wslist.add(new String[]{hostport[0], hostport[1], workerType});
-			}
+  /**
+   * 获取work列表
+   *
+   * @param parkHost
+   * @param parkPort
+   * @param workerType
+   * @return
+   */
+  List<String[]> getWorkersServicePark(String parkHost, int parkPort, String workerType) {
+    List<ObjectBean> objectBeanList = ParkPatternExecutor
+        .getWorkerTypeList(parkHost, parkPort, workerType);
+    List<String[]> wslist = new ArrayList<>();
+    for (ObjectBean ob : objectBeanList) {
+      String[] hostPort = ((String) ob.toObject()).split(":");
+      if (!hostPort[0].equals(null) || Integer.parseInt(hostPort[1]) != 0) {
+        wslist.add(new String[]{hostPort[0], hostPort[1], workerType});
+      }
 
     }
     return wslist;
   }
 
+  /**
+   * @param host
+   * @param port
+   * @param workerType
+   * @return
+   */
   List<String[]> getWorkersService(String host, int port, String workerType) {
     //LogUtil.fine("", "", "getWorkersService:"+workerType);
-    List<ObjectBean> oblist = ParkPatternExector
-        .getWorkerTypeList(workerType);//getWorkerTypeList(String host, int port, String workerType)
-    List<String[]> wslist = new ArrayList<String[]>();
+
+    // getWorkerTypeList(String host, int port, String workerType)
+    List<ObjectBean> oblist = ParkPatternExecutor.getWorkerTypeList(workerType);
+    List<String[]> wslist = new ArrayList<>();
     for (ObjectBean ob : oblist) {
       //System.out.println("ob.toObject():"+ob.toObject());
       String[] hostport = ((String) ob.toObject()).split(":");
-			if (!hostport[0].equals(host) || Integer.parseInt(hostport[1]) != port)//&&
-			{
-				wslist.add(new String[]{hostport[0], hostport[1], workerType});
-			}
+      //&&
+      if (!hostport[0].equals(host) || Integer.parseInt(hostport[1]) != port) {
+        wslist.add(new String[]{hostport[0], hostport[1], workerType});
+      }
 
     }
     return wslist;

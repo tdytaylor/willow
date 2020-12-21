@@ -1,6 +1,6 @@
 package com.fourinone;
 
-public class WorkerLocalProxy extends PoolExector {
+public class WorkerLocalProxy extends PoolExecutor {
 
   MigrantWorker mwobj;
   Thread mwThread;

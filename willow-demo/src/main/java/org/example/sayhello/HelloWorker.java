@@ -4,6 +4,9 @@ import com.fourinone.MigrantWorker;
 import com.fourinone.WareHouse;
 import com.fourinone.Workman;
 
+/**
+ * @author tdytaylor
+ */
 public class HelloWorker extends MigrantWorker {
 
   private String name;
@@ -13,13 +16,13 @@ public class HelloWorker extends MigrantWorker {
   }
 
   @Override
-  public WareHouse doTask(WareHouse inhouse) {
-    System.out.println(inhouse.getString("word"));
+  public WareHouse doTask(WareHouse inHouse) {
+    System.out.println(inHouse.getString("word"));
     WareHouse wh = new WareHouse("word", "hello, i am " + name);
     Workman[] wms = getWorkerElse("helloworker");
-		for (Workman wm : wms) {
-			wm.receive(wh);
-		}
+    for (Workman wm : wms) {
+      wm.receive(wh);
+    }
     return wh;
   }
 

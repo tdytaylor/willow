@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MigrantWorker extends WorkerParallel implements ParkStatg {
 
-  String host, workerType, workerjarname;
+  String host, workerType, workerJarName;
   int port;
   private int selfIndex = -1;
   private volatile boolean _interrupted;
@@ -13,12 +13,13 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
   public static void main(String[] args) {
     MigrantWorker mw = new MigrantWorker();
     //System.out.println(args.length);
-		if (args.length == 4) {
-			mw.setWorkerJar(args[3]);
-		}
+    if (args.length == 4) {
+      mw.setWorkerJar(args[3]);
+    }
     mw.waitWorking(args[0], Integer.parseInt(args[1]), args[2]);
   }
 
+  @Override
   void waitWorkingByService(String workerType) {
     //publish service and reg heatbeat
     //try{
@@ -33,8 +34,8 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
     //}
   }
 
-  void waitWorkingByService(String host, int port, String workerType)//remove protected
-  {
+  @Override
+  void waitWorkingByService(String host, int port, String workerType) { //remove protected
     //String[] wkcfg = ConfigContext.getWorkerConfig();
     //startWorker(wkcfg[0], Integer.parseInt(wkcfg[1]), sn, mwk);
     this.host = host;
@@ -43,32 +44,36 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
     //BeanContext.startWorker(host, port, workerType, this);
     BeanContext
         .startWorker(host, port, workerType, this, this.getClass().equals(MigrantWorker.class));
-    ParkPatternExector.createWorkerTypeNode(workerType, host + ":" + port);
+    ParkPatternExecutor.createWorkerTypeNode(workerType, host + ":" + port);
   }
 
-  void waitWorkingByService(String parkhost, int parkport, String host, int port,
+  @Override
+  void waitWorkingByService(String parkHost, int parkPort, String host, int port,
       String workerType) {
     this.host = host;
     this.port = port;
     this.workerType = workerType;
     BeanContext.startWorker(host, port, workerType, this, false);
-    ParkPatternExector.createWorkerTypeNode(parkhost, parkport, workerType, host + ":" + port);
+    ParkPatternExecutor.createWorkerTypeNode(parkHost, parkPort, workerType, host + ":" + port);
   }
 
+  @Override
   void waitWorkingByPark(String workerType) {
-    ObjectBean ob = ParkPatternExector.createWorkerTypeNode(workerType, "wk_pk");
+    ObjectBean ob = ParkPatternExecutor.createWorkerTypeNode(workerType, "wk_pk");
 
     while (true) {
-      ObjectBean lastestOb = ParkPatternExector.getLastestObjectBean(ob);
+      ObjectBean lastestOb = ParkPatternExecutor.getLastestObjectBean(ob);
       WareHouse whouse = doTask((WareHouse) lastestOb.toObject());
-      ob = ParkPatternExector.updateObjectBean(lastestOb, whouse);
+      ob = ParkPatternExecutor.updateObjectBean(lastestOb, whouse);
     }
   }
 
+  @Override
   protected Workman[] getWorkerElse() {
     return getWorkerElse(this.workerType);
   }
 
+  @Override
   protected Workman[] getWorkerElse(String workerType) {
 		/*List<Workman> wklist = new ArrayList<Workman>();
 		if(parallelPatternFlag!=1)
@@ -81,28 +86,32 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
     return getWorkers(host, port, workerType);
   }
 
+  @Override
   protected Workman getWorkerIndex(int index) {
     return getWorkerIndex(this.workerType, index);
   }
 
+  @Override
   protected Workman getWorkerIndex(String workerType, int index) {
     //if(parallelPatternFlag!=1)
     //{
     List<String[]> wslist = getWorkersService(workerType);
-		if (index >= 0 && index < wslist.size()) {
-			String[] wsinfo = wslist.get(index);
-			return BeanContext.getWorkman(wsinfo[0], Integer.parseInt(wsinfo[1]), wsinfo[2]);
-		} else {
-			return null;
-		}
+    if (index >= 0 && index < wslist.size()) {
+      String[] wsinfo = wslist.get(index);
+      return BeanContext.getWorkman(wsinfo[0], Integer.parseInt(wsinfo[1]), wsinfo[2]);
+    } else {
+      return null;
+    }
     //}
     //return null;
   }
 
+  @Override
   protected Workman[] getWorkerAll() {
     return getWorkerAll(this.workerType);
   }
 
+  @Override
   protected Workman[] getWorkerAll(String workerType) {
     return getWorkers(null, 0, workerType);
   }
@@ -115,24 +124,25 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
       for (int i = 0; i < wslist.size(); i++) {
         String[] wsinfo = wslist.get(i);
         //System.out.println(wsinfo[0]+":"+wsinfo[1]);
-				if (!wsinfo[0].equals(host) || Integer.parseInt(wsinfo[1]) != port) {
-					wklist.add(BeanContext.getWorkman(wsinfo[0], Integer.parseInt(wsinfo[1]), wsinfo[2]));
-				} else {
-					selfIndex = i;
-				}
+        if (!wsinfo[0].equals(host) || Integer.parseInt(wsinfo[1]) != port) {
+          wklist.add(BeanContext.getWorkman(wsinfo[0], Integer.parseInt(wsinfo[1]), wsinfo[2]));
+        } else {
+          selfIndex = i;
+        }
       }
     }
     return wklist.toArray(new Workman[wklist.size()]);
   }
 
+  @Override
   protected int getSelfIndex() {
     if (selfIndex == -1) {
       List<String[]> wslist = getWorkersService(workerType);
       for (int i = 0; i < wslist.size(); i++) {
         String[] wsinfo = wslist.get(i);
-				if (wsinfo[0].equals(host) && Integer.parseInt(wsinfo[1]) == port) {
-					return i;
-				}
+        if (wsinfo[0].equals(host) && Integer.parseInt(wsinfo[1]) == port) {
+          return i;
+        }
       }
     }
     return selfIndex;
@@ -142,10 +152,11 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
     this.selfIndex = selfIndex;
   }
 
+  @Override
   protected Workman getWorkerElse(String workerType, String host, int port) {
-		if (this.host.equals(host) && this.port == port) {
-			return null;
-		}
+    if (this.host.equals(host) && this.port == port) {
+      return null;
+    }
 
     List<String[]> wslist = getWorkersService(workerType);
     if (wslist != null) {
@@ -153,9 +164,9 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
         String[] wsinfo = wslist.get(i);
         //System.out.println(wsinfo[0]+":"+wsinfo[1]);
 
-				if (wsinfo[0].equals(host) && Integer.parseInt(wsinfo[1]) == port) {
-					return BeanContext.getWorkman(wsinfo[0], Integer.parseInt(wsinfo[1]), wsinfo[2]);
-				}
+        if (wsinfo[0].equals(host) && Integer.parseInt(wsinfo[1]) == port) {
+          return BeanContext.getWorkman(wsinfo[0], Integer.parseInt(wsinfo[1]), wsinfo[2]);
+        }
       }
     }
     return null;
@@ -165,6 +176,7 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
     return receive(inhouse);
   }
 
+  @Override
   protected boolean receive(WareHouse inhouse) {
     return true;
   }
@@ -183,11 +195,11 @@ public class MigrantWorker extends WorkerParallel implements ParkStatg {
   }
 
   public String getWorkerJar() {
-    return workerjarname;
+    return workerJarName;
   }
 
   public void setWorkerJar(String workerjarname) {
-    this.workerjarname = workerjarname;
+    this.workerJarName = workerjarname;
   }
 
   String getHost() {

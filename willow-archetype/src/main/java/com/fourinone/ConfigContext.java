@@ -325,14 +325,14 @@ public class ConfigContext {
     return getMulBean().getFileString(getMulBean().getString(requestUrl));
   }
 
-  public static void main(String[] args) {
-//    BeanContext.setConfigFile("D:\\demo\\comutil\\test\\config.xml");
-    System.out.println(getParkConfig()[0][0]);
-    LogUtil.fine(getCacheConfig());
-    LogUtil.fine("getParallelPattern:" + getParallelPattern());
-    System.out.println(getConfig("CACHEFACADE", "TRYKEYSNUM", null, "500"));
-
-    System.out.println(ConfigContext.class.getResource("/").getPath());
-
-  }
+//  public static void main(String[] args) {
+////    BeanContext.setConfigFile("D:\\demo\\comutil\\test\\config.xml");
+//    System.out.println(getParkConfig()[0][0]);
+//    LogUtil.fine(getCacheConfig());
+//    LogUtil.fine("getParallelPattern:" + getParallelPattern());
+//    System.out.println(getConfig("CACHEFACADE", "TRYKEYSNUM", null, "500"));
+//
+//    System.out.println(ConfigContext.class.getResource("/").getPath());
+//
+//  }
 }

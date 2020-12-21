@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
  * 线程池
  */
 //java.io.Closeable
-public class PoolExector {
+public class PoolExecutor {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PoolExector.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PoolExecutor.class);
 
   private static ThreadPoolExecutor tpe;//rm static, new everytime
   private static ScheduledThreadPoolExecutor stpe;//rm static, new everytime

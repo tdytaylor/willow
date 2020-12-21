@@ -2,7 +2,7 @@ package com.fourinone;
 
 import java.rmi.RemoteException;
 
-public class WorkerServiceProxy extends PoolExector
+public class WorkerServiceProxy extends PoolExecutor
 {
 	Worker wk;
 	private RecallException rx;

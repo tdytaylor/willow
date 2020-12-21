@@ -8,6 +8,7 @@ class ContractorService extends MigrantWorker {
     this.ctor = ctor;
   }
 
+  @Override
   public WareHouse doTask(WareHouse inhouse) {
     return ctor.giveTask(inhouse);
   }

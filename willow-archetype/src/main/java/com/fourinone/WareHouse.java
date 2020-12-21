@@ -35,8 +35,8 @@ public class WareHouse extends ObjValue {
     System.out.println(wh.get("key"));
   }
 
-  public int getStatus()//synchronized 2014.12.8
-  {
+  //synchronized 2014.12.8
+  public int getStatus() {
     return status;
   }
 	
@@ -51,13 +51,12 @@ public class WareHouse extends ObjValue {
     return statusName[status + 1];
   }
 
-  public synchronized boolean isReady()//throws Throwable
-  {
+  public synchronized boolean isReady() {//throws Throwable
     return ready;
   }
 
-  synchronized void setReady(int status)//, Exception expt
-  {
+  //, Exception expt
+  synchronized void setReady(int status) {
     this.ready = true;
     //System.out.println("setReady status:"+status);
     this.status = status;

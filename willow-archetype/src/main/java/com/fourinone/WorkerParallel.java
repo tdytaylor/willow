@@ -5,31 +5,35 @@ public abstract class WorkerParallel extends ParallelService {
   protected int parallelPatternFlag = ConfigContext.getParallelPattern();
 
   //start workerservice or getlastest from park by keyid&workertype and invoke doTask get WareHouse to park and getlastest;
+  @Override
   public void waitWorking(String host, int port, String workerType) {
-		if (parallelPatternFlag == 1) {
-			waitWorkingByPark(workerType);
-		} else {
-			waitWorkingByService(host, port, workerType);
-		}
+    // default parallelPatternFlag = 0
+    if (parallelPatternFlag == 1) {
+      waitWorkingByPark(workerType);
+    } else {
+      waitWorkingByService(host, port, workerType);
+    }
   }
 
+  @Override
   public void waitWorking(String workerType) {
-		if (parallelPatternFlag == 1) {
-			waitWorkingByPark(workerType);
-		} else {
-			waitWorkingByService(workerType);
-		}
+    // default parallelPatternFlag = 0
+    if (parallelPatternFlag == 1) {
+      waitWorkingByPark(workerType);
+    } else {
+      waitWorkingByService(workerType);
+    }
   }
 
-  void waitWorking(String parkhost, int parkport, String host, int port, String workerType) {
-    waitWorkingByService(parkhost, parkport, host, port, workerType);
+  void waitWorking(String parkHost, int parkPort, String host, int port, String workerType) {
+    waitWorkingByService(parkHost, parkPort, host, port, workerType);
   }
 
   abstract void waitWorkingByService(String workerType);
 
   abstract void waitWorkingByService(String host, int port, String workerType);
 
-  abstract void waitWorkingByService(String parkhost, int parkport, String host, int port,
+  abstract void waitWorkingByService(String parkHost, int parkPort, String host, int port,
       String workerType);
 
   abstract void waitWorkingByPark(String workerType);
@@ -50,6 +54,6 @@ public abstract class WorkerParallel extends ParallelService {
 
   protected abstract int getSelfIndex();
 
-  protected abstract boolean receive(WareHouse inhouse);
+  protected abstract boolean receive(WareHouse inHouse);
 
 }

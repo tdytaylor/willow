@@ -27,17 +27,18 @@ public class StartResult<E> extends Result {
   }
 
   public static long h(long t) {
-    return m(t * 60l);
+    return m(t * 60L);
   }
 
   public static long m(long t) {
-    return s(t * 60l);
+    return s(t * 60L);
   }
 
   public static long s(long t) {
-    return t * 1000l;
+    return t * 1000L;
   }
 
+  @Override
   public int getStatus() {
     try {
       //System.out.println("p.exitValue():"+p.exitValue());
@@ -72,6 +73,7 @@ public class StartResult<E> extends Result {
   public void print(final String logpath) {
     final InputStream is = p.getInputStream();
     new AsyncExecutor() {
+      @Override
       public void task() { //throws Exception
         BufferedReader stdout = new BufferedReader(new InputStreamReader(is));
         FileAdapter fa = new FileAdapter(new File(logpath).getPath());

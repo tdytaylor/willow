@@ -17,6 +17,7 @@ class CoolHashWorker extends DumpWorker {
     cw.waitWorking(args);
   }
 
+  @Override
   Object dump(String d, int i, String k, byte[] v, byte c, boolean p, String... psk) {
     byte[] vl = null;
     int s = 0;
@@ -43,22 +44,22 @@ class CoolHashWorker extends DumpWorker {
                   if (p && vl[vl.length - 1] == (byte) DumpAdapter.ConstBit[8]) {
                     StringBuilder pk = (new StringBuilder(Target.getTargetObject(vl, String.class)))
                         .append(psk != null && pl.size() < psk.length ? psk[pl.size()] : "");
-										if (!pl.contains(pk.toString())) {
-											pl.add(pk.toString());
-											DumpAdapter pkda = dar.getKeyMeta(pk.toString());
-											dal.releaseLock();
-											dal.close();
-											byte[] plvl = (byte[]) dump(pkda.toString(), i, pk.toString(), v, c, p, psk);
-											pl.remove(pk.toString());
-											return plvl != null ? plvl : vl;
-										} else {
-											chex.pointLoopException();
-										}
+                    if (!pl.contains(pk.toString())) {
+                      pl.add(pk.toString());
+                      DumpAdapter pkda = dar.getKeyMeta(pk.toString());
+                      dal.releaseLock();
+                      dal.close();
+                      byte[] plvl = (byte[]) dump(pkda.toString(), i, pk.toString(), v, c, p, psk);
+                      pl.remove(pk.toString());
+                      return plvl != null ? plvl : vl;
+                    } else {
+                      chex.pointLoopException();
+                    }
                   }
                   //2017.10
-									if (c == 0x1a) {
-										c = 0;
-									}
+                  if (c == 0x1a) {
+                    c = 0;
+                  }
                   //2017.10
                   vl = dumpHandle(vl, c, p, psk);//vl!=null?
                   break;
@@ -71,10 +72,10 @@ class CoolHashWorker extends DumpWorker {
             DumpAdapter daw = new DumpAdapter(dar.toString());
             int index = brp.getReadIndex();
             byte[] bts = brp.read((int) dar.length() - index);
-						if (bts != null) {
-							daw.getWriter(index - k.length() - vl.length - DumpAdapter.ConstBit[1], bts.length)
-									.write(bts);
-						}
+            if (bts != null) {
+              daw.getWriter(index - k.length() - vl.length - DumpAdapter.ConstBit[1], bts.length)
+                  .write(bts);
+            }
             s = s - k.length() - vl.length - DumpAdapter.ConstBit[1] - DumpAdapter.ConstBit[2];
             bwp.reset().writeInt(s);
             daw.getWriter(0, DumpAdapter.ConstBit[2]).write(bwp.getBytes());
@@ -85,9 +86,9 @@ class CoolHashWorker extends DumpWorker {
         //if(vl!=null&&c==0)
         //break;
         //else vl=null;
-				if (vl != null) {
-					break;
-				}
+        if (vl != null) {
+          break;
+        }
       }
     }
     if (c >= 0x12) {
@@ -110,18 +111,18 @@ class CoolHashWorker extends DumpWorker {
           return null;
         }
         ns += s;
-				if (ns + DumpAdapter.ConstBit[2] <= DumpAdapter.ms) {
-					byte[] btn = bwp.reset().writeInt(ns).getBytes();
-					byte[] bts = bwp.reset(ns).writeShort((short) k.length()).writeChars(k).writeInt(v.length)
-							.writeBytes(v).getBytes();
-					DumpAdapter daw = new DumpAdapter(da, i);
-					daw.getWriter(0, DumpAdapter.ConstBit[2]).write(btn);
-					daw.getWriter(DumpAdapter.ConstBit[2] + s, bts.length).write(bts);
-					daw.close(dal);
-					break;
-				} else {
-					i++;
-				}
+        if (ns + DumpAdapter.ConstBit[2] <= DumpAdapter.ms) {
+          byte[] btn = bwp.reset().writeInt(ns).getBytes();
+          byte[] bts = bwp.reset(ns).writeShort((short) k.length()).writeChars(k).writeInt(v.length)
+              .writeBytes(v).getBytes();
+          DumpAdapter daw = new DumpAdapter(da, i);
+          daw.getWriter(0, DumpAdapter.ConstBit[2]).write(btn);
+          daw.getWriter(DumpAdapter.ConstBit[2] + s, bts.length).write(bts);
+          daw.close(dal);
+          break;
+        } else {
+          i++;
+        }
         s = 0;
       }
     }
@@ -131,17 +132,18 @@ class CoolHashWorker extends DumpWorker {
     return vl;
   }
 
+  @Override
   public WareHouse doTask(WareHouse inhouse) {
     WareHouse wh = new WareHouse();
     try {
       byte c = inhouse.getByte(0x0);
-			if (c >= 0x40) {
-				String w = inhouse.getString(0x3c);
-				List<File> df = dumpAdapter.getWalkTree(w);
-				wh.put(0x1e, df);
-			} else {
-				wh = super.doTask(inhouse);
-			}
+      if (c >= 0x40) {
+        String w = inhouse.getString(0x3c);
+        List<File> df = dumpAdapter.getWalkTree(w);
+        wh.put(0x1e, df);
+      } else {
+        wh = super.doTask(inhouse);
+      }
     } catch (Exception ex) {
       LogUtil.info("[CoolHashWorker]", "[doTask]", ex.toString());
     }

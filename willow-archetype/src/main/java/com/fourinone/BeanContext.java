@@ -360,7 +360,7 @@ public class BeanContext extends ServiceContext {
   }
 
   public static ObjectBean getLock(String locknode, String lockname) {
-    ParkLocal pl = ParkPatternExector.getParkLocal();//String parkhost, int parkport
+    ParkLocal pl = ParkPatternExecutor.getParkLocal();//String parkhost, int parkport
     ObjectBean ob = pl.create(locknode, lockname);
     String nodename = ob.getNode();
     while (true) {
@@ -388,7 +388,7 @@ public class BeanContext extends ServiceContext {
 	}*/
 
   public static void unLock(ObjectBean ob) {
-    ParkPatternExector.getParkLocal().delete(ob.getDomain(), ob.getNode());
+    ParkPatternExecutor.getParkLocal().delete(ob.getDomain(), ob.getNode());
   }
 
   public static String getNumber() {

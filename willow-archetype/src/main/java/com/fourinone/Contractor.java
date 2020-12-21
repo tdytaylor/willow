@@ -88,7 +88,7 @@ public abstract class Contractor extends ContractorParallel {
   WorkerLocal[] getWaitingWorkersFromPark(String workerType) {
     LogUtil.fine("", "", "getWaitingWorkersFromPark:" + workerType);
     //if(wks==null){
-    List<ObjectBean> oblist = ParkPatternExector.getWorkerTypeList(workerType);
+    List<ObjectBean> oblist = ParkPatternExecutor.getWorkerTypeList(workerType);
     //System.out.println("getWaitingWorkersFromPark oblist:"+oblist);
     List<WorkerLocal> wklist = new ArrayList<WorkerLocal>();
     for (ObjectBean ob : oblist) {
@@ -230,7 +230,7 @@ public abstract class Contractor extends ContractorParallel {
   Result operateAsyn(final Object instance, final String methodname, final Class[] argsType,
       final Object[] argsValue) {
     final Result rt = new Result(false);
-    PoolExector.tpe().execute(new Runnable() {
+    PoolExecutor.tpe().execute(new Runnable() {
       public void run() {
         try {
           Object obj = DelegateConsole.operate(instance, methodname, argsType, argsValue);

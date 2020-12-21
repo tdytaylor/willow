@@ -23,7 +23,7 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
 
   DumpCtor(String parkhost, int parkport) {
     writeAhead.setMark(false);
-    ParkPatternExector.newParkFlag = true;//2015.7.9
+    ParkPatternExecutor.newParkFlag = true;//2015.7.9
     wks = getWaitingWorkers(parkhost, parkport, "DataWorker");
     LogUtil.info("", "", "DataWorker Number:" + wks.length);
   }

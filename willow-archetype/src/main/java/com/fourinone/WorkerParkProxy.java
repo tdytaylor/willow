@@ -21,7 +21,7 @@ final public class WorkerParkProxy {
     //domain,node,inhouse,outhouse->ParkPatternBean->ParkPatternExector to park and get whLastest
     String[] keyarr = ParkObjValue.getDomainNode(domainnodekey);
     ParkPatternBean ppb = new ParkPatternBean(keyarr[0], keyarr[1], inhouse, outhouse, rx);
-    ParkPatternExector.append(ppb);
+    ParkPatternExecutor.append(ppb);
     return outhouse;
   }
 }

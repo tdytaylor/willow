@@ -334,7 +334,7 @@ public class FileAdapter extends File {
 
         private Result<byte[]> tryReadAll(final boolean locked) {
           final FileResult<byte[]> fr = new FileResult<byte[]>(false);
-          PoolExector.tpe().execute(new Runnable() {
+          PoolExecutor.tpe().execute(new Runnable() {
             public void run() {
               try {
                 byte[] wh = locked ? readAllSafety() : readAll();
@@ -453,7 +453,7 @@ public class FileAdapter extends File {
 
         private Result<int[]> tryIntReadAll(final boolean locked) {
           final FileResult<int[]> fr = new FileResult<int[]>(false);
-          PoolExector.tpe().execute(new Runnable() {
+          PoolExecutor.tpe().execute(new Runnable() {
             public void run() {
               try {
                 int[] wh = locked ? readIntAllSafety() : readIntAll();
@@ -741,7 +741,7 @@ public class FileAdapter extends File {
 
       private Result<Integer> tryWrite(final byte[] bytes, final int[] its, final boolean locked) {
         final FileResult<Integer> fr = new FileResult<Integer>(false);
-        PoolExector.tpe().execute(new Runnable() {
+        PoolExecutor.tpe().execute(new Runnable() {
           public void run() {
             try {
               int bl = locked ? writeSafety(bytes, its) : write(bytes, its);
@@ -857,7 +857,7 @@ public class FileAdapter extends File {
 
   public Result<Integer> tryCopyTo(final String toFilePath, final long every) {
     final FileResult<Integer> fr = new FileResult<Integer>(false);
-    PoolExector.tpe().execute(new Runnable() {
+    PoolExecutor.tpe().execute(new Runnable() {
       public void run() {
         try {
           int bl = copyTo(toFilePath, every);
@@ -901,7 +901,7 @@ public class FileAdapter extends File {
   }
 
   public void closeExit() {
-    PoolExector.close();
+    PoolExecutor.close();
     close();
   }
 

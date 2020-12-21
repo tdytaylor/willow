@@ -14,15 +14,17 @@ public class FttpMigrantWorker extends MigrantWorker {
     fw.waitWorking("localhost", 2121, FttpMigrantWorker.FTTPSN);//default port
   }
 
-  void waitWorkingByService(String host, int port, String workerType)//remove protected
-  {
+  //remove protected
+  @Override
+  void waitWorkingByService(String host, int port, String workerType) {
     this.host = host;
     this.port = port;
     this.workerType = workerType;
     BeanContext.startFttpWorker(host, port, workerType, this);
-    ParkPatternExector.createWorkerTypeNode(workerType, host + ":" + port);
+    ParkPatternExecutor.createWorkerTypeNode(workerType, host + ":" + port);
   }
 
+  @Override
   public boolean receive(WareHouse inhouse) {
     String fp = inhouse.getString("filepath");
     //System.out.println("fp:"+fp);
@@ -30,11 +32,11 @@ public class FttpMigrantWorker extends MigrantWorker {
     boolean wr = true;
     FileAdapter fa = new FileAdapter(fp);
     try {
-			if (fbs == null) {
-				fa.createFile();
-			} else {
-				fa.getWriter().writeSafety(fbs);
-			}
+      if (fbs == null) {
+        fa.createFile();
+      } else {
+        fa.getWriter().writeSafety(fbs);
+      }
     } catch (FileException fe) {
       LogUtil.info("[FttpMigrantWorker]", "[receive]", fe.getMessage());
       wr = false;
@@ -53,9 +55,9 @@ public class FttpMigrantWorker extends MigrantWorker {
     boolean r = true;
     FileAdapter fa = new FileAdapter(frompath);
     if (this.host.equals(tofttppath.getHost()) && this.port == getFttpPort(tofttppath)) {
-			if (fa.isDirectory() || fa.length() != fa.copyTo(tofttppath.getPath(), every)) {
-				r = false;
-			}
+      if (fa.isDirectory() || fa.length() != fa.copyTo(tofttppath.getPath(), every)) {
+        r = false;
+      }
     } else {
       Workman wm = getWorkerElse(FTTPSN, tofttppath.getHost(), getFttpPort(tofttppath));
       //just for file
@@ -79,6 +81,7 @@ public class FttpMigrantWorker extends MigrantWorker {
     return r;
   }
 
+  @Override
   public WareHouse doTask(WareHouse inhouse) {
     //throws nosuchmethod exception
     return null;
