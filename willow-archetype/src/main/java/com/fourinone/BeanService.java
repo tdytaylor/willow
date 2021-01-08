@@ -28,7 +28,8 @@ class BeanService extends PoolExecutor {
     } catch (Exception ex) {
       try {
         UnicastRemoteObject.exportObject(paobj, 0);
-        Registry rgsty = LocateRegistry.createRegistry(TPYDK);//getRegistry(TPYDK);
+        //getRegistry(TPYDK);
+        Registry rgsty = LocateRegistry.createRegistry(TPYDK);
         rgsty.rebind(rmname, paobj);
       } catch (Exception e) {
         LogUtil.info("[ObjectService]", "[regObject]", "[Error Exception:]", e);

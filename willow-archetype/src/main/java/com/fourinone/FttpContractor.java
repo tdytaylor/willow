@@ -35,6 +35,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
 
   static FttpContractor getContractor() {
     return new FttpContractor() {
+      @Override
       public WareHouse giveTask(WareHouse inhouse) {
         return null;
         //throw new NoSuchMethodException();
@@ -44,6 +45,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
 
   static FttpContractor getContractor(String parentPath, String filename) throws FttpException {
     return new FttpContractor(parentPath, filename) {
+      @Override
       public WareHouse giveTask(WareHouse inhouse) {
         return null;
         //throw new NoSuchMethodException();
@@ -82,6 +84,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   WorkerLocal[] getWaitingWorkersFromService(String workerType, MigrantWorker mw) {
     LogUtil.fine("", "", "getWaitingWorkersFromService:" + workerType + ",MigrantWorker:" + mw);
     if (wks == null) {
@@ -127,6 +130,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     setFttpLocal(false);
   }
 
+  @Override
   public byte[] readAll() throws FttpException {
     try {
       return getFttpLocal().readByte(fli.getPath(), rb, rt);
@@ -135,6 +139,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public Result<byte[]> tryReadAll() {
     //try{
     //return getFttpLocal().readByteAsyn(fli.getPath(),rb,rt);
@@ -144,6 +149,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     return tryReadAll(false);
   }
 
+  @Override
   public byte[] readAllSafety() throws FttpException {
     try {
       return getFttpLocal().readByteLocked(fli.getPath(), rb, rt);
@@ -156,6 +162,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
 		
 	}*/
 
+  @Override
   public Result<byte[]> tryReadAllSafety() {
     return tryReadAll(true);
   }
@@ -169,6 +176,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public int[] readIntAll() throws FttpException {
     try {
       return getFttpLocal().readInt(fli.getPath(), rb, rt);
@@ -177,6 +185,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public int[] readIntAllSafety() throws FttpException {
     try {
       return getFttpLocal().readIntLocked(fli.getPath(), rb, rt);
@@ -185,10 +194,12 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public Result<int[]> tryIntReadAll() {
     return tryIntReadAll(false);
   }
 
+  @Override
   public Result<int[]> tryIntReadAllSafety() {
     return tryIntReadAll(true);
   }
@@ -202,6 +213,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public int write(byte[] bytes) throws FttpException {
     try {
       return getFttpLocal().writeByte(fli.getPath(), wb, wt, bytes);
@@ -210,11 +222,13 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public Result<Integer> tryWrite(byte[] bytes) {
     //return getFttpLocal().writeByteAsyn(fli.getPath(),wb,wt,bytes);
     return tryWrite(bytes, false);
   }
 
+  @Override
   public int writeSafety(byte[] bytes) throws FttpException {
     try {
       return getFttpLocal().writeByteLocked(fli.getPath(), wb, wt, bytes);
@@ -223,6 +237,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public Result<Integer> tryWriteSafety(byte[] bytes) {
     return tryWrite(bytes, true);
   }
@@ -236,6 +251,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public int writeInt(int[] its) throws FttpException {
     try {
       return getFttpLocal().writeInt(fli.getPath(), wb, wt, its);
@@ -244,6 +260,7 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public int writeIntSafety(int[] its) throws FttpException {
     try {
       return getFttpLocal().writeIntLocked(fli.getPath(), wb, wt, its);
@@ -252,10 +269,12 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     }
   }
 
+  @Override
   public Result<Integer> tryIntWrite(int[] its) {
     return tryIntWrite(its, false);
   }
 
+  @Override
   public Result<Integer> tryIntWriteSafety(int[] its) {
     return tryIntWrite(its, true);
   }
@@ -314,27 +333,33 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     return fcs;
   }
 
+  @Override
   public boolean isFile() {
     //System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
     return getBoolValue("isFile");
   }
 
+  @Override
   public boolean exists() {
     return getBoolValue("exists");
   }
 
+  @Override
   public boolean isDirectory() {
     return getBoolValue("isDirectory");
   }
 
+  @Override
   public boolean isHidden() {
     return getBoolValue("isHidden");
   }
 
+  @Override
   public boolean canRead() {
     return getBoolValue("canRead");
   }
 
+  @Override
   public boolean canWrite() {
     return getBoolValue("canWrite");
   }
@@ -343,15 +368,18 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
     return ((Boolean) res.getObj(mn)).booleanValue();
   }
 
+  @Override
   public String getName() {
     String fname = res.getString("getName");
     return fname.equals("") ? res.getString("getPath") : fname;//.replaceAll("/","")
   }
 
+  @Override
   public String getParent() {
     return getFttpPath("getParent");
   }
 
+  @Override
   public String getPath() {
     return getFttpPath("getPath");
   }
@@ -365,26 +393,31 @@ abstract class FttpContractor extends Contractor implements FttpAdapter.FttpAdap
         .getFttpURI(fli, ObjectBytes.getEscape(res.getString(mn)), null).toString() : null;
   }
 
+  @Override
   public String getPathEncode() {
     return ObjectBytes.getUtf8UrlString(getPath());//getUrlString,encodeReplace
   }
 
+  @Override
   public long lastModified() {
     return getLongValue("lastModified");
   }
 
+  @Override
   public Date lastModifiedDate() {
     return new Date(lastModified());
   }
 
+  @Override
   public long length() {
-    return isDirectory() ? 0l : getLongValue("length");
+    return isDirectory() ? 0L : getLongValue("length");
   }
 
   private long getLongValue(String mn) {
     return ((Long) res.getObj(mn)).longValue();
   }
 
+  @Override
   public String[] list() {
     return (String[]) res.getObj("list");
   }

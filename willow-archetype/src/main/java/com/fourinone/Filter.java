@@ -17,78 +17,93 @@ public interface Filter<T, S> extends CoolHashBase {
 
     enum Action implements Condition {
       OP_GREATER {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() > (((Number[]) value)[0]).doubleValue());
         }
       },
       OP_LESS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() < (((Number[]) value)[0]).doubleValue());
         }
       },
       OP_EQUALS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() == (((Number[]) value)[0]).doubleValue());
         }
       },
       OP_NOTEQUALS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() != (((Number[]) value)[0]).doubleValue());
         }
       },
       OP_GREATER_EQUALS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() >= (((Number[]) value)[0]).doubleValue());
         }
       },
       OP_LESS_EQUALS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() <= (((Number[]) value)[0]).doubleValue());
         }
       },
       OP_BETWEEN {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() > (((Number[]) value)[0]).doubleValue()
               && ((Number) key).doubleValue() < (((Number[]) value)[1]).doubleValue());
         }
       },
       OP_BETWEEN_EQUALS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return (((Number) key).doubleValue() >= (((Number[]) value)[0]).doubleValue()
               && ((Number) key).doubleValue() <= (((Number[]) value)[1]).doubleValue());
         }
       },
       OP_EQUALS_STR {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return key.equals(((String[]) value)[0]);
         }
       },
       OP_NOTEQUALS_STR {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return !key.equals(((String[]) value)[0]);
         }
       },
       OP_STARTSWITH {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return ((String) key).startsWith(((String[]) value)[0]);
         }
       },
       OP_ENDSWITH {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return ((String) key).endsWith(((String[]) value)[0]);
         }
       },
       OP_CONTAINS {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return ((String) key).contains(((String[]) value)[0]);
         }
       },
       OP_BECONTAINED {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return ((String[]) value)[0].contains((String) key);
         }
       },
       OP_MATCHES {
+        @Override
         public boolean matchAction(Object key, Object value) {
           return ((String) key).matches(((String[]) value)[0]);
         }
@@ -206,10 +221,12 @@ public interface Filter<T, S> extends CoolHashBase {
     public static void main(String[] args) {
     }
 
+    @Override
     public T getFilterKey() {
       return filterKey;
     }
 
+    @Override
     public S[] getFilterValue() {
       return filterValue;
     }
@@ -224,6 +241,7 @@ public interface Filter<T, S> extends CoolHashBase {
       valuecd = ConstantBit.Target.getTargetMatch(filterValue[0].getClass());
     }
 
+    @Override
     public boolean match(byte[] vb) {
       return valuecd.matchAction(this, vb);
     }

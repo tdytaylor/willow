@@ -159,11 +159,13 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
     return wh;
   }
 
+  @Override
   public void begin() {
     lockbean = BeanContext.getLock();//String parkhost, int parkport
     writeAhead.setMark(true);
   }
 
+  @Override
   public void rollback() {
     chex.rollback();
     writeAhead.setMark(false);
@@ -171,6 +173,7 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
     BeanContext.unLock(lockbean);
   }
 
+  @Override
   public void commit() {
     String[] walk = (String[]) writeAhead.keySet().toArray(new String[0]);
     int i = 0;
@@ -209,6 +212,7 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
     }
   }
 
+  @Override
   public Object remove(String key) throws CoolHashException {
     chex.checking(key);
     byte[] bts = writeAhead.getMark() ? (byte[]) writeAhead.put(key, null)
@@ -216,14 +220,17 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
     return bts != null ? Target.getTargetObject(bts, brp) : null;
   }
 
+  @Override
   public Object get(String key) throws CoolHashException {
     return get(key, null);
   }
 
+  @Override
   public <T> T get(String key, Class<T> valueType) throws CoolHashException {
     return get(key, valueType, false);
   }
 
+  @Override
   public <T> T get(String key, Class<T> valueType, boolean point, String... pointSubKey)
       throws CoolHashException {
     return get(key, valueType, (byte) 0x0, point, pointSubKey);
@@ -237,6 +244,7 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
     return bts != null ? Target.getTargetObject(bts, valueType, brp) : null;
   }
 
+  @Override
   public <T> Object put(String key, T value) throws CoolHashException {
     if (value instanceof CoolBitSet) {
       chex.checkingCoolBitSet(((CoolBitSet) value).getSize() - 1, null);//2017.10
@@ -260,15 +268,18 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
   }
 
   //2017.10
+  @Override
   public <T> Object putPlus(String key, T plusValue) throws CoolHashException {
     chex.checkingPlusValue(plusValue);
     return put(key, plusValue, (byte) 0x18);
   }
 
+  @Override
   public <T> Object putNx(String key, T value) throws CoolHashException {
     return put(key, value, (byte) 0x1a);
   }
 
+  @Override
   public String putPoint(String keyPoint, String key) throws CoolHashException {
     chex.checking(keyPoint);
     chex.checking(key);
@@ -278,56 +289,67 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
   }
 
   //2017.10
+  @Override
   public int putBitSet(String key, int index) throws CoolHashException {
     chex.checkingCoolBitSet(index, null);
     return (int) put(key, index, (byte) 0x1c);
   }
 
+  @Override
   public int putBitSet(String key, CoolBitSet cbs) throws CoolHashException {
     return (int) putBitSet(key, cbs, null);
   }
 
+  @Override
   public Object putBitSet(String key, CoolBitSet cbs, String logical) throws CoolHashException {
     chex.checkingCoolBitSet(cbs.getSize() - 1, logical);
     return put(key, cbs, (byte) 0x1d, false, logical);
   }
 
+  @Override
   public boolean getBitSet(String key, int index) throws CoolHashException {
     chex.checkingCoolBitSet(index, null);
     Integer i = get(key, Integer.class, (byte) 0x2, false, index + "");//cant find return null?
     return i != null && i == 1;
   }
 
+  @Override
   public Object getPoint(String keyPoint, String... pointSubKey) throws CoolHashException {
     return getPoint(keyPoint, null, pointSubKey);
   }
 
+  @Override
   public <T> T getPoint(String keyPoint, Class<T> valueType, String... pointSubKey)
       throws CoolHashException {
     chex.checking(keyPoint);
     return get(keyPoint, valueType, true, pointSubKey);
   }
 
+  @Override
   public int remove(CoolHashMap.CoolKeySet<String> keys) {
     WareHouse[] wh = dump(keys.toArray(new String[0]), null, null, (byte) 0x2a, false);
     return getResultNum(wh);
   }
 
+  @Override
   public int put(CoolHashMap keyvalue) {
     WareHouse[] wh = dump((String[]) keyvalue.keySet().toArray(new String[0]),
         keyvalue.getValues().toArray(), null, (byte) 0x2c, false);
     return getResultNum(wh);
   }
 
+  @Override
   public CoolHashMap get(CoolHashMap.CoolKeySet<String> keys) {
     CoolHashMap hm = get(keys, null, false);
     return hm;
   }
 
+  @Override
   public CoolHashMap get(CoolHashMap.CoolKeySet<String> keys, Filter filter) {
     return get(keys, filter, false);
   }
 
+  @Override
   public CoolHashMap get(CoolHashMap.CoolKeySet<String> keys, Filter filter, boolean point,
       String... pointSubKey) {
     WareHouse[] wh = dump(keys.toArray(new String[0]), null, filter, (byte) 0x28, point,
@@ -355,31 +377,38 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
     return rb;
   }
 
+  @Override
   public CoolKeyResult findKey(String keywild) {
     return findKey(keywild, null);
   }
 
+  @Override
   public CoolKeyResult findKey(String keywild, Filter filter) {
     return findKey(keywild, filter, false);
   }
 
+  @Override
   public CoolKeyResult findKey(String keywild, Filter filter, boolean point,
       String... pointSubKey) {
     return (CoolKeyResult) find(keywild, filter, point, pointSubKey);
   }
 
+  @Override
   public CoolHashResult find(String keywild) {
     return find(keywild, null);
   }
 
+  @Override
   public CoolHashResult find(String keywild, Filter filter) {
     return find(keywild, filter, false);
   }
 
+  @Override
   public CoolHashResult find(String keywild, Filter filter, boolean point, String... pointSubKey) {
     return chex.checkWild(keywild) ? new CoolResult(keywild, filter, point, pointSubKey) : null;
   }
 
+  @Override
   public WareHouse giveTask(WareHouse inhouse) {
     return null;
   }
@@ -391,6 +420,7 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
 
 
   //2015.7.15 ctor operateAsyn
+  @Override
   public Result operateAsyn(String methodname, Class[] argsType, Object[] argsValue) {
     return operateAsyn(this, methodname, argsType, argsValue);
   }
@@ -423,10 +453,12 @@ class DumpCtor extends Contractor implements CoolHashBase, CoolHashClient {
       }
     }
 
+    @Override
     public CoolHashMap nextBatch(int batchLength) {
       return (CoolHashMap) nextBatchAction(batchLength, (byte) 0x20);
     }
 
+    @Override
     public CoolHashMap.CoolKeySet nextBatchKey(int batchLength) {
       return (CoolHashMap.CoolKeySet) nextBatchAction(batchLength, (byte) 0x1e);
     }

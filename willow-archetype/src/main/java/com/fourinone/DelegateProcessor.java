@@ -24,6 +24,7 @@ public class DelegateProcessor extends AbstractProcessor {
     processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, msg);
   }
 
+  @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (TypeElement te : annotations) {
       note("annotation:" + te.toString());

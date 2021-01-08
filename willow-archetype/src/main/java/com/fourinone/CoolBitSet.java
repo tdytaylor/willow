@@ -21,10 +21,14 @@ public class CoolBitSet implements Serializable {
       4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
   };
 
-  byte[] bitArr = null;//byte[0x1312D0]
+  /**
+   * byte[0x1312D0]
+   */
+  byte[] bitArr = null;
 
   public CoolBitSet() {
-    this(0x989680, true);//0x7FFFFFFF
+    //0x7FFFFFFF
+    this(0x989680, true);
   }
 
   public CoolBitSet(int maxSize) {
@@ -47,7 +51,8 @@ public class CoolBitSet implements Serializable {
   public boolean get(int n) {
     int i = 0;
     try {
-      i = bitArr[n >> 0x3] & (byte) 0x1 << (n & 0x7);//(byte):-128
+      //(byte):-128
+      i = bitArr[n >> 0x3] & (byte) 0x1 << (n & 0x7);
     } catch (Exception ex) {
       LogUtil.info("[CoolBitSet]", "[get]", ex.toString());
     }
@@ -73,7 +78,8 @@ public class CoolBitSet implements Serializable {
   public int set(byte[] bitArr) {
     int n = 0;
     int m = Math.min(this.bitArr.length, bitArr.length);
-    for (int i = 0; i < m; i++) {//this.bitArr?
+    //this.bitArr?
+    for (int i = 0; i < m; i++) {
       if (this.bitArr[i] != bitArr[i]) {
         n += btable[((this.bitArr[i] | bitArr[i]) ^ this.bitArr[i]) & 0xff];
         this.bitArr[i] |= bitArr[i];

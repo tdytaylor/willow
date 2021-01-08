@@ -8,6 +8,7 @@ class CoolHashCtor extends DumpCtor implements CoolHashClient {
     super(parkhost, parkport);
   }
 
+  @Override
   public CoolHashResult find(String keywild, Filter filter, boolean point, String... pointSubKey) {
     if (chex.checkWild(keywild)) {
       WareHouse whtk = new WareHouse(0x0, (byte) 0x40);
@@ -23,6 +24,7 @@ class CoolHashCtor extends DumpCtor implements CoolHashClient {
     return null;
   }
 
+  @Override
   byte[] dump(String k, byte[] v, byte c, boolean p, String... psk) {
     WareHouse wh = new WareHouse(0x0, c);
     DumpAdapter da = dumpAdapter.getKeyMeta(k);
@@ -47,6 +49,7 @@ class CoolHashCtor extends DumpCtor implements CoolHashClient {
     return null;
   }
 
+  @Override
   public WareHouse giveTask(WareHouse inhouse) {
     try {
       WareHouse[] result = doTaskCompete(wks, new WareHouse[]{inhouse});

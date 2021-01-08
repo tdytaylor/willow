@@ -324,10 +324,12 @@ public class FileAdapter extends File {
           return rbts;
         }
 
+        @Override
         public Result<byte[]> tryReadAll() {
           return tryReadAll(false);
         }
 
+        @Override
         public Result<byte[]> tryReadAllSafety() {
           return tryReadAll(true);
         }

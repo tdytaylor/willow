@@ -215,6 +215,7 @@ public class CoolHashMap extends LinkedHashMap implements Map, CoolHashBase {
     return this;
   }
 
+  @Override
   public String toString() {
     return entrySet().toString();
   }
@@ -223,6 +224,7 @@ public class CoolHashMap extends LinkedHashMap implements Map, CoolHashBase {
     return getEntrySet().toString();
   }
 
+  @Override
   protected boolean removeEldestEntry(Entry eldest) {
     return size() > maxCapacity;
   }
@@ -280,10 +282,12 @@ public class CoolHashMap extends LinkedHashMap implements Map, CoolHashBase {
       return v;
     }
 
+    @Override
     public String toString() {
       return k + "=" + v;
     }
 
+    @Override
     public int compareTo(Entry o) {
       return getKey().compareTo((String) o.getKey());
     }

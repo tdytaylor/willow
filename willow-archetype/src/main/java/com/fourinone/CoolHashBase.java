@@ -3,7 +3,7 @@ package com.fourinone;
 import com.fourinone.FileAdapter.ByteReadParser;
 import com.fourinone.FileAdapter.ByteWriteParser;
 
-interface CoolHashBase {
+public interface CoolHashBase {
 
   CoolHashException chex = new CoolHashException();
   ByteWriteParser bwp = DumpAdapter.getByteWriteParser();

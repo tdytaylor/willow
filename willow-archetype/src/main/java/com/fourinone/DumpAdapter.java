@@ -132,10 +132,12 @@ class DumpAdapter extends FileAdapter {
     lockMeta = new DumpAdapter(getParent(), getName() + "\u002E\u006C\u006F\u0063\u006B");
   }
 
+  @Override
   public boolean readLock() {
     return windows ? super.readLock() : writeLock();
   }
 
+  @Override
   public boolean writeLock() {
     if (windows) {
       return super.writeLock();
@@ -160,6 +162,7 @@ class DumpAdapter extends FileAdapter {
     }
   }
 
+  @Override
   public boolean releaseLock() {
     try {
       return windows ? super.releaseLock() : lockMeta.renameTo(this);

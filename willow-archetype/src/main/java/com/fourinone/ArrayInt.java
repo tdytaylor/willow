@@ -14,12 +14,14 @@ final class ArrayInt extends ArrayAdapter implements ArrayAdapter.ListInt {
     objarr[objindex++] = arrint;
   }
 
+  @Override
   public void add(int[] initarr) {
     for (int i : initarr) {
       add(i);
     }
   }
 
+  @Override
   public void add(int i) {
     if (arrindex == arrint.length) {
       arrint = new int[arrsize];
@@ -30,30 +32,36 @@ final class ArrayInt extends ArrayAdapter implements ArrayAdapter.ListInt {
     arrint[arrindex++] = i;
   }
 
+  @Override
   public int size() {
     //System.out.println("objindex:"+objindex+",arrindex:"+arrindex);
     return (objindex - 1) * arrsize + arrindex;
   }
 
+  @Override
   public void set(int index, int i) {
     ((int[]) objarr[index / arrsize])[index % arrsize] = i;
   }
 
+  @Override
   public int get(int index) {
     return ((int[]) objarr[index / arrsize])[index % arrsize];
   }
 
+  @Override
   public void sort() {
     IntSort is = new IntSort();
     is.arrsort(0, size() - 1);
   }
 
+  @Override
   public int[] sort(int[] arr) {
     IntSort is = new IntSort(arr);
     is.intsort(0, arr.length - 1);
     return arr;
   }
 
+  @Override
   public int[] toArray() {
     int s = size();
     int[] m = new int[s];
@@ -63,6 +71,7 @@ final class ArrayInt extends ArrayAdapter implements ArrayAdapter.ListInt {
     return m;
   }
 
+  @Override
   public void order(int[] arr) {
     Arrays.sort(arr);
   }
