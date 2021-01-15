@@ -10,8 +10,6 @@ public class RpcClassHolder {
 
   private String name;
 
-  private String interfaceName;
-
   private Class<?> cla;
 
   private List<String> methods;
@@ -20,7 +18,6 @@ public class RpcClassHolder {
   public static final class RpcClassHolderBuilder {
 
     private String name;
-    private String interfaceName;
     private Class<?> cla;
     private List<String> methods;
 
@@ -36,11 +33,6 @@ public class RpcClassHolder {
       return this;
     }
 
-    public RpcClassHolderBuilder withInterfaceName(String interfaceName) {
-      this.interfaceName = interfaceName;
-      return this;
-    }
-
     public RpcClassHolderBuilder withCla(Class<?> cla) {
       this.cla = cla;
       return this;
@@ -53,7 +45,6 @@ public class RpcClassHolder {
 
     public RpcClassHolder build() {
       RpcClassHolder rpcClassHolder = new RpcClassHolder();
-      rpcClassHolder.interfaceName = this.interfaceName;
       rpcClassHolder.name = this.name;
       rpcClassHolder.methods = this.methods;
       rpcClassHolder.cla = this.cla;
@@ -63,10 +54,6 @@ public class RpcClassHolder {
 
   public String getName() {
     return name;
-  }
-
-  public String getInterfaceName() {
-    return interfaceName;
   }
 
   public Class<?> getCla() {
@@ -81,7 +68,6 @@ public class RpcClassHolder {
   public String toString() {
     return "RpcClassHolder{" +
         "name='" + name + '\'' +
-        ", interfaceName='" + interfaceName + '\'' +
         ", cla=" + cla +
         ", methods=" + methods +
         '}';
