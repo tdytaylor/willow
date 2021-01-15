@@ -14,7 +14,6 @@ class RpcFactoryTest {
     final RpcClassHolder hello = RpcClassHolderBuilder.aRpcClassHolder()
         .withCla(HelloImpl.class)
         .withName("hello")
-        .withInterfaceName("org.willow.api.Hello")
         .build();
     rpcFactory.register(hello);
   }
