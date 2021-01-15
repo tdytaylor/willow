@@ -12,6 +12,7 @@
     <module>willow-archetype</module>
     <module>willow-demo</module>
     <module>willow-core</module>
+    <module>willow-rpc</module>
   </modules>
 
   <properties>
