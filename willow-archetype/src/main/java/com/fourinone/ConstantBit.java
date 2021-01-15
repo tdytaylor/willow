@@ -26,6 +26,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return cd.matchAction(getObject((byte[]) value), filter.getFilterValue());
       }
 
+      @Override
       public byte[] getBytes(Object value, ByteWriteParser bwp) {
         if (bwp == null) {
           return getBytes(value);
@@ -36,6 +37,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return bwp.getBytes();
       }
 
+      @Override
       public String getObject(byte[] bts, ByteReadParser brp) {
         if (brp == null) {
           return (String) getObject(bts);
@@ -45,6 +47,7 @@ interface ConstantBit<T> extends CoolHashBase {
       }
     },
     SHORT(DumpAdapter.ConstBit[1], DumpAdapter.ConstBit[1]) {
+      @Override
       public byte[] getBytes(Object value, ByteWriteParser bwp) {
         if (bwp == null) {
           return getBytes(value);
@@ -55,6 +58,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return bwp.getBytes();
       }
 
+      @Override
       public Short getObject(byte[] bts, ByteReadParser brp) {
         if (brp == null) {
           return (Short) getObject(bts);
@@ -64,6 +68,7 @@ interface ConstantBit<T> extends CoolHashBase {
       }
     },
     INTEGER(DumpAdapter.ConstBit[2], DumpAdapter.ConstBit[2]) {
+      @Override
       public byte[] getBytes(Object value, ByteWriteParser bwp) {
         if (bwp == null) {
           return getBytes(value);
@@ -74,6 +79,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return bwp.getBytes();
       }
 
+      @Override
       public Integer getObject(byte[] bts, ByteReadParser brp) {
         if (brp == null) {
           return (Integer) getObject(bts);
@@ -83,6 +89,7 @@ interface ConstantBit<T> extends CoolHashBase {
       }
     },
     FLOAT(DumpAdapter.ConstBit[4], DumpAdapter.ConstBit[2]) {
+      @Override
       public byte[] getBytes(Object value, ByteWriteParser bwp) {
         if (bwp == null) {
           return getBytes(value);
@@ -93,6 +100,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return bwp.getBytes();
       }
 
+      @Override
       public Float getObject(byte[] bts, ByteReadParser brp) {
         if (brp == null) {
           return (Float) getObject(bts);
@@ -102,6 +110,7 @@ interface ConstantBit<T> extends CoolHashBase {
       }
     },
     LONG(DumpAdapter.ConstBit[3], DumpAdapter.ConstBit[3]) {
+      @Override
       public byte[] getBytes(Object value, ByteWriteParser bwp) {
         if (bwp == null) {
           return getBytes(value);
@@ -112,6 +121,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return bwp.getBytes();
       }
 
+      @Override
       public Long getObject(byte[] bts, ByteReadParser brp) {
         if (brp == null) {
           return (Long) getObject(bts);
@@ -121,6 +131,7 @@ interface ConstantBit<T> extends CoolHashBase {
       }
     },
     DOUBLE(DumpAdapter.ConstBit[5], DumpAdapter.ConstBit[3]) {
+      @Override
       public byte[] getBytes(Object value, ByteWriteParser bwp) {
         if (bwp == null) {
           return getBytes(value);
@@ -131,6 +142,7 @@ interface ConstantBit<T> extends CoolHashBase {
         return bwp.getBytes();
       }
 
+      @Override
       public Double getObject(byte[] bts, ByteReadParser brp) {
         if (brp == null) {
           return (Double) getObject(bts);
